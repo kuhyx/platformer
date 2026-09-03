@@ -1,0 +1,6 @@
+# gdtoolkit (gdlint) — strictest useful settings. Line cap matches D08.
+max-file-lines: 250
+max-line-length: 100
+max-public-methods: 20
+function-arguments-number: 6
+disable: []

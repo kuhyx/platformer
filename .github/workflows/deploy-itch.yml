@@ -1,0 +1,28 @@
+name: deploy-itch
+# Manual push of a web build to itch.io. Secrets needed: BUTLER_CREDENTIALS.
+# Repository variables: ITCH_USER, ITCH_GAME. Only proto-phaser builds in
+# CI today; other prototypes are pushed from a local machine with butler.
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: itch channel name (e.g. phaser-html5)
+        required: true
+        default: phaser-html5
+
+jobs:
+  phaser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: cd proto-phaser && npm install --no-audit --no-fund && npm run build
+      - run: python3 tools/size_budget.py proto-phaser/dist 1500000
+      - uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: ${{ inputs.channel }}
+          ITCH_GAME: ${{ vars.ITCH_GAME }}
+          ITCH_USER: ${{ vars.ITCH_USER }}
+          PACKAGE: proto-phaser/dist

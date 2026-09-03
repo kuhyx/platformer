@@ -1,0 +1,15 @@
+# generated / dependencies
+node_modules/
+dist/
+build/
+target/
+bin/
+.godot/
+*.o
+# runtime data
+analytics/
+*.log
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

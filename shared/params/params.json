@@ -1,0 +1,18 @@
+{
+  "move_speed": {"value": 160, "min": 40, "max": 400, "step": 5, "unit": "px/s", "desc": "Horizontal run speed"},
+  "gravity": {"value": 1400, "min": 400, "max": 4000, "step": 50, "unit": "px/s^2", "desc": "Downward acceleration"},
+  "max_fall_speed": {"value": 900, "min": 200, "max": 2000, "step": 25, "unit": "px/s", "desc": "Terminal fall speed"},
+  "jump_velocity": {"value": 420, "min": 100, "max": 1000, "step": 10, "unit": "px/s", "desc": "Initial upward speed on jump"},
+  "jump_cut_multiplier": {"value": 0.4, "min": 0, "max": 1, "step": 0.05, "unit": "ratio", "desc": "Vertical speed kept when jump is released early"},
+  "coyote_time": {"value": 0.08, "min": 0, "max": 0.3, "step": 0.01, "unit": "s", "desc": "Grace period to jump after leaving a ledge"},
+  "jump_buffer": {"value": 0.1, "min": 0, "max": 0.3, "step": 0.01, "unit": "s", "desc": "Jump press remembered before landing"},
+  "player_w": {"value": 12, "min": 4, "max": 64, "step": 1, "unit": "px", "desc": "Avatar width"},
+  "player_h": {"value": 16, "min": 4, "max": 64, "step": 1, "unit": "px", "desc": "Avatar height"},
+  "blade_speed": {"value": 120, "min": 0, "max": 600, "step": 10, "unit": "px/s", "desc": "Room 2 blade patrol speed"},
+  "respawn_delay": {"value": 0.25, "min": 0, "max": 2, "step": 0.05, "unit": "s", "desc": "Time from death to reappearing at checkpoint"},
+  "hitstop": {"value": 0.06, "min": 0, "max": 0.5, "step": 0.01, "unit": "s", "desc": "Freeze on death"},
+  "shake_amplitude": {"value": 3, "min": 0, "max": 20, "step": 1, "unit": "px", "desc": "Screen shake strength on death"},
+  "shake_duration": {"value": 0.15, "min": 0, "max": 1, "step": 0.05, "unit": "s", "desc": "Screen shake length on death"},
+  "death_particles": {"value": 24, "min": 0, "max": 200, "step": 4, "unit": "count", "desc": "Particles spawned on death"},
+  "state_log_every": {"value": 10, "min": 1, "max": 600, "step": 1, "unit": "ticks", "desc": "Debug build: full-state log interval"}
+}

@@ -1,0 +1,19 @@
+-- GENERATED FILE - edit shared/params/params.json and run `make gen-params`
+return {
+    move_speed = { value = 160, min = 40, max = 400, step = 5 },
+    gravity = { value = 1400, min = 400, max = 4000, step = 50 },
+    max_fall_speed = { value = 900, min = 200, max = 2000, step = 25 },
+    jump_velocity = { value = 420, min = 100, max = 1000, step = 10 },
+    jump_cut_multiplier = { value = 0.4, min = 0, max = 1, step = 0.05 },
+    coyote_time = { value = 0.08, min = 0, max = 0.3, step = 0.01 },
+    jump_buffer = { value = 0.1, min = 0, max = 0.3, step = 0.01 },
+    player_w = { value = 12, min = 4, max = 64, step = 1 },
+    player_h = { value = 16, min = 4, max = 64, step = 1 },
+    blade_speed = { value = 120, min = 0, max = 600, step = 10 },
+    respawn_delay = { value = 0.25, min = 0, max = 2, step = 0.05 },
+    hitstop = { value = 0.06, min = 0, max = 0.5, step = 0.01 },
+    shake_amplitude = { value = 3, min = 0, max = 20, step = 1 },
+    shake_duration = { value = 0.15, min = 0, max = 1, step = 0.05 },
+    death_particles = { value = 24, min = 0, max = 200, step = 4 },
+    state_log_every = { value = 10, min = 1, max = 600, step = 1 },
+}

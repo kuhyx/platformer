@@ -1,0 +1,64 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: python3 tools/check_line_cap.py
+      - run: python3 tools/validate_params.py
+      - run: python3 tools/gen_params.py && git diff --exit-code -- 'proto-*/params.*'
+
+  godot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "gdtoolkit==4.*"
+      - run: cd proto-godot && gdlint . && gdformat --check .
+      # Web export needs the editor + templates; add barichello/godot-ci
+      # once export_presets.cfg is committed.
+
+  phaser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      # Switch to `npm ci` once package-lock.json is committed.
+      - run: cd proto-phaser && npm install --no-audit --no-fund
+      - run: cd proto-phaser && npm run lint && npm run build
+      - run: python3 tools/size_budget.py proto-phaser/dist 1500000
+
+  love:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y lua-check
+      - run: cd proto-love && luacheck .
+
+  raylib:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y clang-format
+      - run: cd proto-raylib && make lint
+      # Native compile needs raylib 6.0; Ubuntu's package lags. Build from
+      # source in a later step or use a container image.
+
+  bevy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: "clippy, rustfmt" }
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: "proto-bevy" }
+      - run: sudo apt-get update && sudo apt-get install -y libasound2-dev libudev-dev
+      - run: cd proto-bevy && cargo fmt --check && cargo clippy --all-targets -- -D warnings
