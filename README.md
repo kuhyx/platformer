@@ -7,7 +7,9 @@ Nothing here is the game yet; it is the harness for choosing how to build it.
 ## Layout
 
 ```
+HANDOFF.md       start here when picking this repo up
 spec/            binding design + tech spec (start with decisions.md)
+docs/            session log and the pre-decision research report
 shared/params/   the parameter registry — single source for every tunable
 tools/           line-cap check, params validation/generation, size budget, load timer
 proto-godot/     Godot 4.6, GDScript

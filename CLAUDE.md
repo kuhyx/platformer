@@ -1,6 +1,6 @@
 # CLAUDE.md — agent entry point
 
-Read `spec/decisions.md` first. It is binding. Then `spec/slice.md`.
+Read `HANDOFF.md`, then `spec/decisions.md` (binding), then `spec/slice.md`.
 
 ## What this repo is
 Bake-off for a 2D single-player platformer: five prototypes of one slice.
