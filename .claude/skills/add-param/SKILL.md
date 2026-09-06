@@ -6,7 +6,7 @@ description: Add or change a tunable end to end — registry entry, regenerate c
 # add-param
 
 1. Add the entry to `shared/params/params.json` following
-   `spec/parameters.md` (value, min, max, step, unit, desc).
+   `spec/DOCS-parameters.md` (value, min, max, step, unit, desc).
 2. `make gen-params`.
 3. Replace the literal in code with the engine's accessor
    (`Params.get_value`, `param()`, `PARAM(P_*)`, `params.get`).

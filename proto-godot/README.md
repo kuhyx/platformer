@@ -1,11 +1,16 @@
 # proto-godot
 
-Godot 4.6, GDScript, GL Compatibility renderer. Status: boot stub only.
+Godot 4.7, GDScript, GL Compatibility renderer. Status: boot stub only.
 
 ## Requirements
-- Godot 4.6.x editor + export templates (verify the current 4.6 patch on
-  godotengine.org/download before installing; do not trust this file).
-- `pip install "gdtoolkit==4.*"` for gdlint/gdformat.
+- Godot 4.7.2 editor + export templates (newest stable; the
+  dependency-freshness gate does not track Godot, so re-check
+  github.com/godotengine/godot/releases when bumping).
+- `pip install "gdtoolkit==4.5.0"` for gdlint/gdformat.
+
+First open on a fresh clone: `godot --headless --path . --import` builds
+`.godot/` (gitignored), which registers the `Params` class; without it
+`main.gd` fails to parse.
 
 ## Run
 ```

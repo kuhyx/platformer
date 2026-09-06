@@ -1,4 +1,4 @@
-// Time-to-first-playable-frame for a web build (spec/tech-reqs.md, D10).
+// Time-to-first-playable-frame for a web build (spec/DOCS-tech-reqs.md, D10).
 // Usage: node tools/measure_load.mjs <url> [runs=5]
 // Requires: npm i -D playwright && npx playwright install chromium
 // Run 1 is uncached; runs 2..n share the HTTP cache. Pass = cached median < 2000 ms.

@@ -16,8 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: "22" }
-      - run: cd proto-phaser && npm install --no-audit --no-fund && npm run build
+        with: { node-version: "24.20.0" }
+      - run: cd proto-phaser && npm ci --no-audit --no-fund && npm run build
       - run: python3 tools/size_budget.py proto-phaser/dist 1500000
       - uses: manleydev/butler-publish-itchio-action@master
         env:

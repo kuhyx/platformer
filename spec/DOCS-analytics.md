@@ -5,7 +5,7 @@ One directory per run: `analytics/<utc-timestamp>/` in the user-data dir.
 - `meta.json` — build id, engine, params hash, seed, device info.
 - `inputs.jsonl` — one line per input change: `{"t":<tick>,"a":"jump","v":1}`.
 - `state.jsonl` — one line per `state_log_every` ticks: full snapshot
-  (`dev-principles.md` §3).
+  (`DOCS-dev-principles.md` §3).
 - `events.jsonl` — death, checkpoint, room enter, pause.
 - `video.*` — only when recording was explicitly enabled this session.
 - `gaze.jsonl` — only when gaze was explicitly enabled; browser + WebGazer.

@@ -1,13 +1,13 @@
 # Research (2026-09-02, pre-decision)
 
-Output of the engine bake-off research that preceded `spec/decisions.md`.
+Output of the engine bake-off research that preceded `spec/DOCS-decisions.md`.
 Reference only; where this disagrees with `spec/`, the spec wins.
 
 | File | Contents |
 |---|---|
-| `01-engine-scores.md` | 11-engine scoring table, version facts, shortlist reasoning |
-| `02-web-load-and-tooling.md` | web bundle sizes, SharedArrayBuffer, MCP/agent tooling, test/lint, analytics |
-| `03-spec-critique.md` | contradictions in the original brief and how each was resolved |
+| `DOCS-01-engine-scores.md` | 11-engine scoring table, version facts, shortlist reasoning |
+| `DOCS-02-web-load-and-tooling.md` | web bundle sizes, SharedArrayBuffer, MCP/agent tooling, test/lint, analytics |
+| `DOCS-03-spec-critique.md` | contradictions in the original brief and how each was resolved |
 
 ## Sources consulted
 - godotengine.org — "Web Export in 4.3" (wasm ~40 MB raw / ~5 MB Brotli)

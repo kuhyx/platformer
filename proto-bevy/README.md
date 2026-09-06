@@ -1,9 +1,9 @@
 # proto-bevy
 
-Bevy 0.19, Rust. Status: boot stub only; API names unverified against 0.19.
+Bevy 0.19.1, Rust. Status: boot stub only; compiles clean under clippy.
 
 ## Requirements
-- Rust stable via rustup; `cargo search bevy` to confirm the 0.19.x patch.
+- Rust stable via rustup (Bevy 0.19.1 needs >= 1.95; `rustup update stable`).
 - Linux: `libasound2-dev libudev-dev` (Bevy audio/input).
 - Web: `rustup target add wasm32-unknown-unknown`, `cargo install trunk`
   or `wasm-bindgen-cli`, plus `wasm-opt` (binaryen).
@@ -39,6 +39,9 @@ inspection/mutation over BRP). Input injection: send input events over
 BRP or expose a debug system that reads a command queue.
 
 ## Notes
-- Bevy breaks APIs roughly every 3 months. Pin the exact patch in
-  Cargo.lock and commit it.
+- Bevy breaks APIs roughly every 3 months. `Cargo.toml` exact-pins every
+  crate and `Cargo.lock` is committed; the dependency-freshness gate
+  reports when a newer stable exists.
+- `src/lib.rs` owns the registry so its slider bounds and `keys()` are
+  public API rather than dead code in a binary that does not call them yet.
 - `clippy::pedantic` is on; keep it. Fix, do not `allow`.

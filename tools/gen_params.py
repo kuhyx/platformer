@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate per-prototype copies of the parameter registry (spec/parameters.md)."""
+"""Generate per-prototype copies of the parameter registry (spec/DOCS-parameters.md)."""
 
 from __future__ import annotations
 

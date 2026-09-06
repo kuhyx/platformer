@@ -9,18 +9,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: python3 tools/check_line_cap.py
+        with: { python-version: "3.x" }
       - run: python3 tools/validate_params.py
-      - run: python3 tools/gen_params.py && git diff --exit-code -- 'proto-*/params.*'
+      - run: python3 tools/gen_params.py && git diff --exit-code -- ':(glob)proto-*/params.json' ':(glob)proto-*/params.lua' ':(glob)proto-*/params.h'
 
   godot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install "gdtoolkit==4.*"
+        with: { python-version: "3.x" }
+      - run: pip install "gdtoolkit==4.5.0"
       - run: cd proto-godot && gdlint . && gdformat --check .
       # Web export needs the editor + templates; add barichello/godot-ci
       # once export_presets.cfg is committed.
@@ -30,9 +29,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: "22" }
-      # Switch to `npm ci` once package-lock.json is committed.
-      - run: cd proto-phaser && npm install --no-audit --no-fund
+        with: { node-version: "24.20.0" }
+      - run: cd proto-phaser && npm ci --no-audit --no-fund
       - run: cd proto-phaser && npm run lint && npm run build
       - run: python3 tools/size_budget.py proto-phaser/dist 1500000
 

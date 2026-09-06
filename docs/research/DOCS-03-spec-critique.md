@@ -1,7 +1,7 @@
 # Spec critique → resolution
 
 Each contradiction found in the original brief, and the decision that
-closed it. Unresolved items are Open Questions in `spec/decisions.md`.
+closed it. Unresolved items are Open Questions in `spec/DOCS-decisions.md`.
 
 | Contradiction | Resolution |
 |---|---|

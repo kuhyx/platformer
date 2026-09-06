@@ -1,6 +1,6 @@
 extends Node2D
 ## Boot stub: loads the registry, draws the avatar placeholder, signals web
-## readiness. The slice (spec/slice.md) is not implemented yet.
+## readiness. The slice (spec/DOCS-slice.md) is not implemented yet.
 
 const REGISTRY_PATH := "res://params.json"
 const PLACEHOLDER_SPAWN := Vector2(100, 400)  # slice will read spawn from room data

@@ -1,14 +1,12 @@
 //! Boot stub: opens the window, draws the avatar placeholder, signals web
-//! readiness. The slice (spec/slice.md) is not implemented yet.
-//! API names follow Bevy 0.16-era conventions; check the 0.19 migration
-//! guide on the first build and fix what moved.
-mod params;
-
+//! readiness. The slice (spec/DOCS-slice.md) is not implemented yet.
+//! Compiles clean against Bevy 0.19.1 (`cargo clippy --all-targets -- -D warnings`).
 use bevy::prelude::*;
-use params::Params;
+use proto_bevy::params::Params;
 
-const WIDTH: f32 = 854.0; // D13
-const HEIGHT: f32 = 480.0; // D13
+const WIDTH: u32 = 854; // D13
+const HEIGHT: u32 = 480; // D13
+
 // Bevy's 2D origin is the screen centre; spawn expressed in that space.
 const PLACEHOLDER_SPAWN: Vec3 = Vec3::new(-327.0, -160.0, 0.0);
 

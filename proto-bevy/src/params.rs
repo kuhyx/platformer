@@ -1,4 +1,4 @@
-//! Parameter registry accessor (spec/parameters.md). The generated
+//! Parameter registry accessor (spec/DOCS-parameters.md). The generated
 //! `params.json` is compiled in; nothing in `src/` holds a tunable literal.
 use bevy::prelude::Resource;
 use serde::Deserialize;
@@ -33,9 +33,7 @@ impl Params {
         let entries = raw
             .into_iter()
             .filter(|(key, _)| !key.starts_with('_'))
-            .map(|(key, value)| {
-                (key, serde_json::from_value(value).expect("registry entry shape"))
-            })
+            .map(|(key, value)| (key, serde_json::from_value(value).expect("registry entry shape")))
             .collect();
         Self(entries)
     }

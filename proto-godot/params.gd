@@ -1,6 +1,6 @@
 class_name Params
 extends RefCounted
-## Parameter registry accessor (spec/parameters.md). Every tunable comes
+## Parameter registry accessor (spec/DOCS-parameters.md). Every tunable comes
 ## from params.json; nothing is hardcoded. Reload with load_registry().
 
 static var _values: Dictionary = {}

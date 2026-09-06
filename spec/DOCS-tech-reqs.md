@@ -32,7 +32,7 @@ Starting points. Tighten after the first measurement.
 ## Native build contract
 - Window 854×480, resizable; content scaled with aspect preserved (D13).
 - Saves: atomic write (temp file + rename) in the platform user-data dir.
-- Keyboard and gamepad both active (`input-map.md`).
+- Keyboard and gamepad both active (`DOCS-input-map.md`).
 
 ## Analytics
-Debug build only. See `analytics.md`.
+Debug build only. See `DOCS-analytics.md`.

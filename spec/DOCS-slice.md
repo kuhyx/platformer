@@ -47,4 +47,4 @@ listed here is out of scope for the bake-off.
 - [ ] Coyote time and jump buffer verifiably work (set them to 0 and feel
       the difference).
 - [ ] `tools/measure_load.mjs` reports the cached load.
-- [ ] Scorecard row filled in `comparison-protocol.md`.
+- [ ] Scorecard row filled in `DOCS-comparison-protocol.md`.

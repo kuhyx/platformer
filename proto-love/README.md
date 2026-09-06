@@ -3,7 +3,7 @@
 LÖVE (Lua). Status: boot stub only.
 
 ## Requirements
-- LÖVE 11.5 (or current 12.x; update `conf.lua` `t.version` to match).
+- LÖVE 11.5 (newest stable as of 2026-09-06; `conf.lua` matches).
 - `luacheck` (`luarocks install luacheck`).
 - Web: love.js (`npm i -g love.js`); verify it supports the LÖVE version
   you installed.

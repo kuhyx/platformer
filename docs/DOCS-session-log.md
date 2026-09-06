@@ -49,5 +49,27 @@ clang-format, any version pin, Bevy 0.19 API names.
 
 ## 7. Handoff (09-06)
 Owner asked for one zip with everything from the session for a Claude
-Code session. This repo, including `.git`, is that zip. Start at
-`HANDOFF.md`.
+Code session. This repo, including `.git`, is that zip.
+
+## 8. On the PC (09-06, Claude Code)
+Unpacked to `~/platformer`, brought under the fleet's shared gates, pushed
+to `kuhyx/platformer`. Verified here, not in a sandbox:
+- Pins at newest stable, lockfiles committed: Phaser 4.2.1, Vite 8.2.2,
+  ESLint 10.10.0, typescript-eslint 8.69.0 (TypeScript 6.0.3, held
+  fleet-wide); Bevy 0.19.1, serde 1.0.229, serde_json 1.0.151,
+  js-sys 0.3.105. CI toolchains: Node 24.20.0, Python `3.x`,
+  gdtoolkit 4.5.0. Godot 4.7.2, LÖVE 11.5 and raylib 6.0 are the current
+  stable releases per their GitHub release pages.
+- `proto-phaser`: `npm run lint && npm run build`, 356 kB gzip of a
+  1.5 MB budget. Phaser 4 no longer declares `Scene.create`, so `override`
+  came off.
+- `proto-bevy`: `cargo fmt --check && cargo clippy --all-targets -- -D
+  warnings` on Rust 1.98.1. `WindowResolution` takes `(u32, u32)` in 0.19;
+  the registry moved to `src/lib.rs` so its overlay API is not dead code.
+- `proto-raylib`: `make lint && make native` against raylib 6.0.
+- `proto-love`: `luacheck .` clean. LÖVE itself is not installed here.
+- `proto-godot`: gdlint + gdformat clean; `godot --headless --import` then
+  a headless run on 4.7.2 boots `main.tscn`.
+- `tools/check_line_cap.py` deleted in favour of the shared 250-line gate;
+  markdown renamed into the fleet namespaces; `HANDOFF.md` became
+  `TODO-handoff.md` holding only what is still outstanding.

@@ -37,7 +37,7 @@ signalled by icon + audio only. Each needs a designed signal (Open Q4).
 ## D05 — Zero settings
 Status: Accepted · 2026-09-03
 Decision: no settings of any kind. Fixed keyboard and gamepad maps, both
-active at once (`spec/input-map.md`). Volume, fullscreen and resolution
+active at once (`spec/DOCS-input-map.md`). Volume, fullscreen and resolution
 are left to the OS/browser.
 Consequences: accessibility cost accepted by owner. No rebinding, ever.
 Pause is the only overlay and offers resume only (quit: Open Q3).
@@ -72,7 +72,7 @@ Decision: analytics exist only in the developer (debug) build. Core:
 timestamped input log + periodic full-state log + RNG seed →
 deterministic replay. Video and webcam gaze are debug-only, off by
 default, with a visible recording indicator. Public builds contain no
-capture code. Detail: `spec/analytics.md`.
+capture code. Detail: `spec/DOCS-analytics.md`.
 Consequences: deterministic sim is mandatory (D12). Sharing a debug build
 with a friend still records them; owner accepts.
 
@@ -82,12 +82,12 @@ Decision: itch.io. Godot web exports use the single-threaded template (no
 SharedArrayBuffer). Cached load < 2 s to first playable frame, measured
 by `tools/measure_load.mjs`.
 Consequences: every web build sets `window.__gameReady` (see
-`spec/tech-reqs.md`).
+`spec/DOCS-tech-reqs.md`).
 
 ## D11 — Engines: prototype all five
 Status: Accepted · 2026-09-03
-Decision: build `spec/slice.md` in Godot 4.6 GDScript, Phaser/TypeScript,
-LÖVE, raylib 6 and Bevy 0.19. Score per `spec/comparison-protocol.md`,
+Decision: build `spec/DOCS-slice.md` in Godot 4.6 GDScript, Phaser/TypeScript,
+LÖVE, raylib 6 and Bevy 0.19. Score per `spec/DOCS-comparison-protocol.md`,
 then pick one (recorded as D15).
 Recommended order: Godot → Phaser → LÖVE → raylib → Bevy. Apply kill
 criteria early rather than finishing all five.
@@ -112,7 +112,7 @@ Status: Proposed · 2026-09-03
 Decision: every tunable lives in `shared/params/params.json` with
 value/min/max/step/unit/desc. Prototypes read a generated copy
 (`make gen-params`) and never hardcode a tunable. Debug overlays are
-generated from the registry. Contract: `spec/parameters.md`.
+generated from the registry. Contract: `spec/DOCS-parameters.md`.
 Why: makes "everything adjustable live" finite and enforceable.
 
 ## Open questions (answer before the slice is built)

@@ -47,4 +47,4 @@ heavy for <2 s; licensing), C# Godot on web (unofficial), GameMaker and
 Construct (weak testing/lint/agent automation, proprietary).
 
 Owner decision D11: prototype all five of Godot, Phaser, LÖVE, raylib,
-Bevy. Protocol and kill criteria: `spec/comparison-protocol.md`.
+Bevy. Protocol and kill criteria: `spec/DOCS-comparison-protocol.md`.

@@ -1,5 +1,5 @@
 -- Boot stub: loads the generated registry, draws the avatar placeholder.
--- The slice (spec/slice.md) is not implemented yet.
+-- The slice (spec/DOCS-slice.md) is not implemented yet.
 local registry = require("params")
 
 local BACKGROUND = { 0.10, 0.10, 0.12 }

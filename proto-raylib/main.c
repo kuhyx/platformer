@@ -1,5 +1,5 @@
 // Boot stub: opens the window, draws the avatar placeholder from the generated
-// registry, signals web readiness. The slice (spec/slice.md) is not implemented.
+// registry, signals web readiness. The slice (spec/DOCS-slice.md) is not implemented.
 #include "params.h"
 #include "raylib.h"
 

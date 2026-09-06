@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail if a web build's gzip-compressed size exceeds its budget (spec/tech-reqs.md).
+"""Fail if a web build's gzip-compressed size exceeds its budget (spec/DOCS-tech-reqs.md).
 
 Usage: size_budget.py <build-dir> <budget-bytes>
 """

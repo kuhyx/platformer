@@ -1,6 +1,6 @@
 # Game design principles (binding)
 
-Source: owner's brief, 2026-09-02, amended by `decisions.md`.
+Source: owner's brief, 2026-09-02, amended by `DOCS-decisions.md`.
 
 ## 1. Constant gameplay, player always in control
 - No cutscenes, no loading screens, no menus, no settings (D05).
@@ -38,5 +38,5 @@ Checkpoint per room, autosave on entry. Death costs at most the current
 room.
 
 ## Adding anything
-A new element needs a line in this file, an entry in `decisions.md`, and
+A new element needs a line in this file, an entry in `DOCS-decisions.md`, and
 every tunable it introduces registered in `shared/params/params.json`.

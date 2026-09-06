@@ -4,14 +4,14 @@ Phaser + TypeScript + Vite. Browser-native; desktop via a wrapper later.
 Status: boot stub only.
 
 ## Requirements
-Node 22+. First install, then **pin** every `"latest"` in package.json to
-the resolved version (`npm ls --depth=0`) and commit `package-lock.json`.
-Check that the installed Phaser is the 4.x line; if 4.x is not stable,
-pin the newest 3.x and note it in the scorecard.
+Node 24. Every dependency is exact-pinned in `package.json` and
+`package-lock.json` is committed; Phaser is on the 4.x line (4.2.1).
+TypeScript is held at 6.0.3 fleet-wide until typescript-eslint supports
+7 (see `~/utils/dependency-freshness.allowlist.yaml`).
 
 ## Run / build / lint
 ```
-npm install            # npm ci once the lockfile is committed
+npm ci
 npm run dev            # http://localhost:5173 with HMR
 npm run build          # tsc --noEmit && vite build → dist/
 npm run lint

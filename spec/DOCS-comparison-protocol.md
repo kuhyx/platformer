@@ -1,6 +1,6 @@
 # Comparison protocol
 
-Build `slice.md` in each engine, then fill one scorecard row per prototype.
+Build `DOCS-slice.md` in each engine, then fill one scorecard row per prototype.
 
 ## Measurements
 | # | Metric | How |
@@ -33,6 +33,6 @@ Build `slice.md` in each engine, then fill one scorecard row per prototype.
 | bevy | | | | | | | | | | | | |
 
 ## Exit
-Pick one engine and record it as D15 in `decisions.md`. Archive the other
+Pick one engine and record it as D15 in `DOCS-decisions.md`. Archive the other
 prototype directories; do not delete them — they are reference
 implementations of the slice.

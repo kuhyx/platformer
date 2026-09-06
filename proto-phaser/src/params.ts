@@ -1,4 +1,4 @@
-// Parameter registry accessor (spec/parameters.md). Generated params.json
+// Parameter registry accessor (spec/DOCS-parameters.md). Generated params.json
 // is the only source; nothing in src/ holds a tunable literal.
 import registry from "../params.json";
 

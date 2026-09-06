@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate shared/params/params.json against spec/parameters.md."""
+"""Validate shared/params/params.json against spec/DOCS-parameters.md."""
 
 from __future__ import annotations
 
