@@ -21,8 +21,23 @@ jobs:
         with: { python-version: "3.x" }
       - run: pip install "gdtoolkit==4.5.0"
       - run: cd proto-godot && gdlint . && gdformat --check .
-      # Web export needs the editor + templates; add barichello/godot-ci
-      # once export_presets.cfg is committed.
+
+  # Headless sim test + Web export on the image that ships editor + templates.
+  # The image tag is the Godot version; bump it with the README's pin.
+  godot-export:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - run: cd proto-godot && godot --headless --path . --import
+      - run: cd proto-godot && godot --headless --path . -s tests/test_sim.gd
+      # Actions sets HOME=/github/home inside containers; the image keeps its
+      # templates under /root, so expose them where the editor looks.
+      - run: mkdir -p ~/.local/share/godot/export_templates && ln -s /root/.local/share/godot/export_templates/4.7.2.stable ~/.local/share/godot/export_templates/4.7.2.stable
+      - run: cd proto-godot && mkdir -p dist && godot --headless --path . --export-release Web dist/index.html
+      # Size budget deliberately not gated here: the stock template measures
+      # 10.1 MB gzip against a 6 MB budget (D21, awaiting the owner).
 
   phaser:
     runs-on: ubuntu-latest

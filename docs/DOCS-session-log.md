@@ -73,3 +73,22 @@ to `kuhyx/platformer`. Verified here, not in a sandbox:
 - `tools/check_line_cap.py` deleted in favour of the shared 250-line gate;
   markdown renamed into the fleet namespaces; `HANDOFF.md` became
   `TODO-handoff.md` holding only what is still outstanding.
+
+## 9. Godot slice (09-11, Claude Code)
+Owner report "white square, cannot move" was the stub state, not a bug.
+Closed Q1–Q5 as D16–D20, accepted D12–D14, built the slice in Godot:
+`sim.gd` (pure 60 Hz sim, no nodes), `rooms.json` (proto-local layout with
+a winnability assert), `fx.gd`, `save_file.gd`, `analytics.gd`,
+`overlay.gd`, custom web shell. Verified on the PC:
+- `tests/test_sim.gd` headless: 14 checks, 0 failures (hazards, room
+  transition + autosave, goal loop, coyote/buffer at 0 vs default,
+  determinism).
+- Native window: xdotool-held D moves the avatar; death at tick 2747,
+  respawn at 2766 = hitstop + respawn_delay; F1 overlay, F6 dump.
+- Web export (threads off, custom shell): headless Chromium reports
+  `__gameReady` ≈ 1.0–1.3 s uncached on localhost; gate dismisses on
+  click; held D moves 160 px/s; pit kills and respawns.
+- Save: room 1 in `save.json` resumes in room 1; corrupt file → room 0.
+- CI job `godot-export` rehearsed in `barichello/godot-ci:4.7.2` locally.
+Open: M5 is 10.1 MB gzip vs the 6 MB budget (stock template wasm is
+39.5 MB); the size gate is red on purpose until the owner decides.

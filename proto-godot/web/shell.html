@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>$GODOT_PROJECT_NAME</title>
+	<!-- Custom Godot web shell (spec/DOCS-tech-reqs.md web contract, D19).
+	     No text: loading is a bare progress bar; any failure — WebGL2 or
+	     another required feature missing, download error — is a static
+	     crossed-out-monitor icon. Single-threaded, no COOP/COEP. -->
+	<style>
+		html, body { margin: 0; padding: 0; height: 100%; background: #1a1a1f; overflow: hidden; }
+		#canvas { display: block; width: 100%; height: 100%; outline: none; }
+		#status { position: absolute; inset: 0; display: flex; align-items: center;
+			justify-content: center; visibility: hidden; }
+		#status-progress { width: 40%; height: 6px; accent-color: #ffffff; }
+		#status-fail { width: 96px; height: 96px; display: none; }
+	</style>
+	$GODOT_HEAD_INCLUDE
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+	<div id="status">
+		<progress id="status-progress"></progress>
+		<svg id="status-fail" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+			<rect x="10" y="16" width="76" height="50" rx="4" fill="none" stroke="#ffffff" stroke-width="6"/>
+			<rect x="34" y="72" width="28" height="6" fill="#ffffff"/>
+			<line x1="12" y1="12" x2="84" y2="84" stroke="#ff3b30" stroke-width="8" stroke-linecap="round"/>
+		</svg>
+	</div>
+	<script src="$GODOT_URL"></script>
+	<script>
+	const GODOT_CONFIG = $GODOT_CONFIG;
+	const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+	const engine = new Engine(GODOT_CONFIG);
+
+	(function () {
+		const status = document.getElementById('status');
+		const progress = document.getElementById('status-progress');
+		const fail = document.getElementById('status-fail');
+
+		function showFailure(err) {
+			console.error(err);
+			progress.style.display = 'none';
+			fail.style.display = 'block';
+			status.style.visibility = 'visible';
+		}
+
+		const missing = Engine.getMissingFeatures({ threads: GODOT_THREADS_ENABLED });
+		if (missing.length !== 0) {
+			showFailure('missing features: ' + missing.join(', '));
+			return;
+		}
+		status.style.visibility = 'visible';
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					progress.value = current;
+					progress.max = total;
+				} else {
+					progress.removeAttribute('value');
+					progress.removeAttribute('max');
+				}
+			},
+		}).then(function () {
+			status.remove();
+		}, showFailure);
+	}());
+	</script>
+</body>
+</html>

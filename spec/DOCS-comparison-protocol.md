@@ -26,11 +26,20 @@ Build `DOCS-slice.md` in each engine, then fill one scorecard row per prototype.
 ## Scorecard
 | Proto | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | Verdict |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| godot | | | | | | | | | | | | |
+| godot | — | — | 505 | 651 | 10.1 MB | ~2.5 h | yes | partial | yes | yes | 3 | open |
 | phaser | | | | | | | | | | | | |
 | love | | | | | | | | | | | | |
 | raylib | | | | | | | | | | | | |
 | bevy | | | | | | | | | | | | |
+
+## Notes
+- godot (2026-09-11): M1/M2 not measured — no i3 iGPU device on hand;
+  the dev PC (RTX 3090) is not the reference. M3/M4 from
+  `tools/measure_load.mjs` against `python3 -m http.server` on localhost,
+  so M4 is a floor, not a network number. M5 exceeds the 6 MB budget
+  (D21). M8 partial: GDScript reloads only with the editor attached.
+  M9 via xdotool (native) and Playwright `keyboard.down` (web). M10 via
+  `tests/test_sim.gd`, no coverage tool. M11: gdlint + gdformat, 3/5.
 
 ## Exit
 Pick one engine and record it as D15 in `DOCS-decisions.md`. Archive the other

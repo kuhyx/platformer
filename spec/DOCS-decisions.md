@@ -145,5 +145,16 @@ Status: Accepted · 2026-09-11
 Decision: after `respawn_delay` the avatar reappears at the checkpoint
 with no pan, fade or text. (Q5)
 
+## D21 — Godot web size budget
+Status: Proposed · 2026-09-11
+Context: the stock Godot 4.7.2 single-threaded web template exports to
+39.5 MB of wasm, 10.1 MB gzip; `DOCS-tech-reqs.md` budgets proto-godot at
+6 MB. No project-side change can close that gap.
+Decision (recommended): raise the proto-godot budget to 12 MB for the
+bake-off and score the real number; a trimmed custom template build
+(3D, XR, unused modules off) is a follow-up only if Godot wins.
+Alternative: keep 6 MB and treat it as a kill criterion now.
+Consequences: until accepted, CI does not gate proto-godot's size.
+
 ## Open questions
-None. Q1–Q5 closed by D16–D20 on 2026-09-11.
+None. Q1–Q5 closed by D16–D20 on 2026-09-11. D21 awaits the owner.

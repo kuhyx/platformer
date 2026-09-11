@@ -16,4 +16,12 @@ return {
     shake_duration = { value = 0.15, min = 0, max = 1, step = 0.05 },
     death_particles = { value = 24, min = 0, max = 200, step = 4 },
     state_log_every = { value = 10, min = 1, max = 600, step = 1 },
+    goal_flash_duration = { value = 0.12, min = 0, max = 1, step = 0.02 },
+    pause_dim = { value = 0.5, min = 0, max = 1, step = 0.05 },
+    particle_speed = { value = 180, min = 0, max = 800, step = 10 },
+    particle_lifetime = { value = 0.4, min = 0.05, max = 2, step = 0.05 },
+    particle_size = { value = 3, min = 1, max = 12, step = 1 },
+    gate_pulse_period = { value = 1.2, min = 0.2, max = 4, step = 0.1 },
+    gate_icon_radius = { value = 24, min = 4, max = 120, step = 2 },
+    gate_pulse_depth = { value = 0.4, min = 0, max = 1, step = 0.05 },
 }

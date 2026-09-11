@@ -14,5 +14,13 @@
   "shake_amplitude": {"value": 3, "min": 0, "max": 20, "step": 1, "unit": "px", "desc": "Screen shake strength on death"},
   "shake_duration": {"value": 0.15, "min": 0, "max": 1, "step": 0.05, "unit": "s", "desc": "Screen shake length on death"},
   "death_particles": {"value": 24, "min": 0, "max": 200, "step": 4, "unit": "count", "desc": "Particles spawned on death"},
-  "state_log_every": {"value": 10, "min": 1, "max": 600, "step": 1, "unit": "ticks", "desc": "Debug build: full-state log interval"}
+  "state_log_every": {"value": 10, "min": 1, "max": 600, "step": 1, "unit": "ticks", "desc": "Debug build: full-state log interval"},
+  "goal_flash_duration": {"value": 0.12, "min": 0, "max": 1, "step": 0.02, "unit": "s", "desc": "White screen flash on touching the goal"},
+  "pause_dim": {"value": 0.5, "min": 0, "max": 1, "step": 0.05, "unit": "ratio", "desc": "Screen darkening while paused"},
+  "particle_speed": {"value": 180, "min": 0, "max": 800, "step": 10, "unit": "px/s", "desc": "Death particle initial speed"},
+  "particle_lifetime": {"value": 0.4, "min": 0.05, "max": 2, "step": 0.05, "unit": "s", "desc": "Death particle lifetime"},
+  "particle_size": {"value": 3, "min": 1, "max": 12, "step": 1, "unit": "px", "desc": "Death particle side length"},
+  "gate_pulse_period": {"value": 1.2, "min": 0.2, "max": 4, "step": 0.1, "unit": "s", "desc": "Web start gate icon pulse period"},
+  "gate_icon_radius": {"value": 24, "min": 4, "max": 120, "step": 2, "unit": "px", "desc": "Web start gate icon radius at full pulse"},
+  "gate_pulse_depth": {"value": 0.4, "min": 0, "max": 1, "step": 0.05, "unit": "ratio", "desc": "How far the gate icon shrinks at the bottom of a pulse"}
 }
