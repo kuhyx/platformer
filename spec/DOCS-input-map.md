@@ -13,4 +13,4 @@ Both devices are always active. No rebinding. Stick dead zone fixed at
 | Reload params (debug build) | F5 | — |
 | Dump snapshot (debug build) | F6 | — |
 
-Quit: close the window or tab (Open Q3).
+Quit: close the window or tab (D18).

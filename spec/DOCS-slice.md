@@ -5,7 +5,7 @@ listed here is out of scope for the bake-off.
 
 ## World
 - Two rooms, each exactly one screen (854×480), left to right. Walking
-  off the right edge of room 1 enters room 2. (Open Q1 may change this.)
+  off the right edge of room 1 enters room 2. (D16.)
 - Room 1: flat floor, a spike pit mid-room (static hazard), a raised
   ledge after it.
 - Room 2: a horizontally patrolling blade (moving hazard) over a gap; a

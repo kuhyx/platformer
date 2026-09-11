@@ -8,7 +8,7 @@ awaiting the owner. Deciders: repo owner. Format: ADR-lite.
 Status: Accepted · 2026-09-03
 Decision: 2D. Single player. Platformer.
 Consequences: 3D-capable engines score on 2D quality only. Room/camera
-model must be defined (Open Q1).
+model must be defined (D16).
 
 ## D02 — One start gate on web
 Status: Accepted · 2026-09-03
@@ -25,14 +25,14 @@ Death respawns at the current room's checkpoint after `respawn_delay`
 (registry parameter).
 Consequences: "never lose progress" means never lose a room. Save payload
 is tiny (room id + counters), so atomic writes are cheap. Room size must be
-defined (Open Q1).
+defined (D16).
 
 ## D04 — "No text" scope
 Status: Accepted · 2026-09-03
 Decision: applies to the in-game runtime only. Store pages, EULA, OS
 dialogs and crash reports may contain text.
 Consequences: save corruption, missing WebGL, unsupported browser must be
-signalled by icon + audio only. Each needs a designed signal (Open Q4).
+signalled by icon + audio only. Each needs a designed signal (D19).
 
 ## D05 — Zero settings
 Status: Accepted · 2026-09-03
@@ -40,7 +40,7 @@ Decision: no settings of any kind. Fixed keyboard and gamepad maps, both
 active at once (`spec/DOCS-input-map.md`). Volume, fullscreen and resolution
 are left to the OS/browser.
 Consequences: accessibility cost accepted by owner. No rebinding, ever.
-Pause is the only overlay and offers resume only (quit: Open Q3).
+Pause is the only overlay and offers resume only (quit: D18).
 
 ## D06 — Engagement: juice + mastery only
 Status: Accepted · 2026-09-03
@@ -95,33 +95,55 @@ Consequences: roughly 1–2 days per slice solo; 2–3 weeks before the real
 game starts.
 
 ## D12 — Deterministic fixed-step simulation
-Status: Proposed · 2026-09-03
+Status: Accepted · 2026-09-11 (proposed 2026-09-03)
 Decision: simulation at a fixed 60 Hz tick, rendering decoupled. All
 randomness from one seeded RNG stored in saves and replays.
 Why: replay (D09), cross-engine comparability, browser/native parity.
 
 ## D13 — Baseline resolution and renderer
-Status: Proposed · 2026-09-03
+Status: Accepted · 2026-09-11 (proposed 2026-09-03)
 Decision: internal resolution 854×480, scaled to the window with aspect
 preserved. Godot: GL Compatibility renderer. Others: WebGL2 / OpenGL 3.3.
 Why: 480p is the stated performance target; GL Compatibility is the only
 Godot path that runs well on an i3 iGPU and on web.
 
 ## D14 — Parameter registry
-Status: Proposed · 2026-09-03
+Status: Accepted · 2026-09-11 (proposed 2026-09-03)
 Decision: every tunable lives in `shared/params/params.json` with
 value/min/max/step/unit/desc. Prototypes read a generated copy
 (`make gen-params`) and never hardcode a tunable. Debug overlays are
 generated from the registry. Contract: `spec/DOCS-parameters.md`.
 Why: makes "everything adjustable live" finite and enforceable.
 
-## Open questions (answer before the slice is built)
-1. Room = one fixed 854×480 screen with hard transitions, or a scrolling
-   area with a defined boundary? Drives D03 and all camera code.
-2. Player placeholder 12×16 px acceptable?
-3. With zero settings, how does a player quit or start over? Close the
-   window/tab only? Is "new game" ever possible?
-4. Diegetic signals for: save missing/corrupt, WebGL unavailable, gamepad
-   disconnected.
-5. Respawn presentation: hard cut to checkpoint, or brief camera pan? The
-   delay is a parameter; the presentation is a design choice.
+## D15 — reserved: engine verdict
+See `DOCS-comparison-protocol.md` §Exit. Filled after the bake-off.
+
+## D16 — Room = one fixed screen, hard cut
+Status: Accepted · 2026-09-11
+Decision: a room is exactly one 854×480 screen. Leaving a room through
+its edge is a hard cut to the neighbour. No camera code. (Closes Q1.)
+
+## D17 — Avatar placeholder stays 12×16 px
+Status: Accepted · 2026-09-11
+Decision: `player_w`/`player_h` stay at 12×16 for the slice; the physics
+registry values were tuned against it and both are live-tunable. (Q2)
+
+## D18 — No quit, no new game
+Status: Accepted · 2026-09-11
+Decision: the only exit is closing the window or tab. There is no "new
+game": the goal loops to room 1 and death costs at most one room. (Q3)
+
+## D19 — Diegetic failure signals
+Status: Accepted · 2026-09-11
+Decision: save missing or corrupt → start fresh, no signal. WebGL
+unavailable → a static crossed-out-monitor icon drawn by the HTML shell,
+outside the engine. Gamepad disconnect → no signal; the keyboard is
+always live. (Q4)
+
+## D20 — Respawn is a hard cut
+Status: Accepted · 2026-09-11
+Decision: after `respawn_delay` the avatar reappears at the checkpoint
+with no pan, fade or text. (Q5)
+
+## Open questions
+None. Q1–Q5 closed by D16–D20 on 2026-09-11.
