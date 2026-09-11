@@ -28,7 +28,8 @@ CLAUDE.md        agent entry point (AGENTS.md points here)
 1. Read `spec/DOCS-decisions.md` (binding), then `spec/DOCS-slice.md` (what to build).
 2. `scripts/install_hooks.sh` once; then `make hygiene` and
    `pre-commit run --all-files` must pass before any commit.
-3. Pick a prototype directory and follow its README.
+3. `./run.sh <proto>` installs that prototype's dependencies (pacman +
+   project-level) and runs it natively; or follow the prototype's README.
 
 ## Hard rules
 
