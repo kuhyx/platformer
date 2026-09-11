@@ -12,5 +12,5 @@ install chromium` in the repo root (not committed; install locally).
 All Python tools are stdlib-only, Python 3.10+.
 
 The 250-line cap (D08) is not a tool here: it is the shared gate
-`scripts/check_file_length.sh` (a shim over `~/utils`), run by pre-commit
+`scripts/check_file_length.sh` (a shim over `~/src/utils`), run by pre-commit
 and by `.github/workflows/file-length.yml`.

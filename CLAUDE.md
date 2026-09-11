@@ -51,4 +51,4 @@ what their last line printed.
 - 2026-09-03: Unspecified edge cases are surfaced as questions, not assumed.
 - 2026-09-06: A private reimplementation of a shared gate (the old
   `tools/check_line_cap.py`) is a drift risk, not a convenience; use the
-  shim over `~/utils`.
+  shim over `~/src/utils`.

@@ -7,7 +7,7 @@ Status: boot stub only.
 Node 24. Every dependency is exact-pinned in `package.json` and
 `package-lock.json` is committed; Phaser is on the 4.x line (4.2.1).
 TypeScript is held at 6.0.3 fleet-wide until typescript-eslint supports
-7 (see `~/utils/dependency-freshness.allowlist.yaml`).
+7 (see `~/src/utils/dependency-freshness.allowlist.yaml`).
 
 ## Run / build / lint
 ```

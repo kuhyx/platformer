@@ -52,7 +52,7 @@ Owner asked for one zip with everything from the session for a Claude
 Code session. This repo, including `.git`, is that zip.
 
 ## 8. On the PC (09-06, Claude Code)
-Unpacked to `~/platformer`, brought under the fleet's shared gates, pushed
+Unpacked to `~/src/platformer`, brought under the fleet's shared gates, pushed
 to `kuhyx/platformer`. Verified here, not in a sandbox:
 - Pins at newest stable, lockfiles committed: Phaser 4.2.1, Vite 8.2.2,
   ESLint 10.10.0, typescript-eslint 8.69.0 (TypeScript 6.0.3, held

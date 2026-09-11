@@ -6,14 +6,14 @@
 # .git/hooks/ is not tracked, so a fresh clone has no hooks. Run this once
 # after cloning. The checks themselves live in .pre-commit-config.yaml; the
 # four shared gates (line cap, markdown naming, dependency freshness, no
-# binaries) are shims over ~/utils, so that clone has to exist too.
+# binaries) are shims over ~/src/utils, so that clone has to exist too.
 # ============================================================================
 
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 readonly REPO_ROOT
-readonly UTILS_ROOT="${UTILS_ROOT:-$HOME/utils}"
+readonly UTILS_ROOT="${UTILS_ROOT:-$HOME/src/utils}"
 
 ensure_pre_commit() {
     if command -v pre-commit >/dev/null 2>&1; then

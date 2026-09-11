@@ -2,7 +2,7 @@
 
 hygiene: line-cap check-params gen-check
 
-# The shared 250-line gate (~/utils); CI runs the same checker from kuhyx/utils.
+# The shared 250-line gate (~/src/utils); CI runs the same checker from kuhyx/utils.
 line-cap:
 	scripts/check_file_length.sh --all
 

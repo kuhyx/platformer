@@ -9,7 +9,7 @@
 # aborts the commit AND drops the developer's uncommitted edit.
 #
 # The four shared gates are `language: system` shims that exec the checker in
-# ~/utils, so this repo's idea of a rule cannot drift from every other repo's.
+# ~/src/utils, so this repo's idea of a rule cannot drift from every other repo's.
 # fail_fast so a later check cannot run after an earlier one has already
 # rejected the commit.
 fail_fast: true

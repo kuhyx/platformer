@@ -12,7 +12,7 @@ spec/            binding design + tech spec (start with DOCS-decisions.md)
 docs/            session log and the pre-decision research report
 shared/params/   the parameter registry — single source for every tunable
 tools/           params validation/generation, size budget, load timer
-scripts/         shims over the shared gates in ~/utils + install_hooks.sh
+scripts/         shims over the shared gates in ~/src/utils + install_hooks.sh
 proto-godot/     Godot 4.7, GDScript
 proto-phaser/    Phaser + TypeScript + Vite
 proto-love/      LÖVE (Lua)
