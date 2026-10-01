@@ -43,8 +43,9 @@ CLAUDE.md        agent entry point (AGENTS.md points here)
 
 ## Status
 
-Live: https://kuhyx.itch.io/platformer plays proto-godot (D22). Republish
-with Actions → deploy-itch (export, boot gate, butler push).
+Live: https://kuhyx.itch.io/platformer plays proto-godot (D22). It updates
+itself after green checks on `main` (D23); force a republish with
+`gh workflow run deploy-itch.yml -f force=true`.
 
 Godot has the slice (native + web, 2026-09-11); the other four are boot
 stubs. Every manifest is pinned at

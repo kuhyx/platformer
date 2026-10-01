@@ -1,21 +1,106 @@
 name: deploy-itch
-# Manual push of the Godot web build to kuhyx.itch.io/platformer, the one
-# embedded html5 upload (D22). Secret needed: BUTLER_CREDENTIALS (a butler
-# API key). Export -> boot gate -> push; nothing is pushed unless the build
-# reaches its first playable frame (window.__gameReady) in Chromium.
+
+# Auto-update https://kuhyx.itch.io/platformer (channel html5, proto-godot
+# per D22) whenever main changes. Runs after this repo's check workflows
+# finish; deploys only when EVERY check on that commit is green
+# (dependency freshness excepted: an upstream release overnight is not this
+# commit's fault), and only if proto-godot changed since the build that is
+# live now (D23). Export -> boot gate (window.__gameReady in Chromium) ->
+# push. Secret: BUTLER_API_KEY (dedicated itch API key, revocable on its own).
+
 on:
+  workflow_run:
+    workflows: [ci, file-length, md-naming]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      force:
+        description: Deploy even if no game files changed (proves the push path)
+        type: boolean
+        default: false
+
+# One deploy at a time; a newer commit's run waits, never interleaves.
+concurrency:
+  group: deploy-itch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  checks: read
+  actions: read
 
 env:
   ITCH_TARGET: kuhyx/platformer:html5
 
 jobs:
+  gate:
+    # Job names start with "deploy" so the gate can skip this workflow's own
+    # (possibly running or cancelled) check runs on the same commit.
+    name: deploy gate
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.gate.outputs.sha }}
+      deploy: ${{ steps.changed.outputs.deploy }}
+    steps:
+      - name: Every check on this commit green?
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          runs="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${SHA}/check-runs?per_page=100" \
+            --jq '[.check_runs[] | select((.name | startswith("deploy") | not) and (.name | test("freshness|newest stable"; "i") | not))]')"
+          pending="$(jq '[.[] | select(.status != "completed")] | length' <<<"$runs")"
+          bad="$(jq '[.[] | select(.status == "completed" and (.conclusion | IN("success","skipped","neutral") | not))] | length' <<<"$runs")"
+          echo "checks: $(jq length <<<"$runs") pending: $pending failing: $bad"
+          if [[ "$bad" -gt 0 ]]; then echo "go=false" >>"$GITHUB_OUTPUT"; echo "::warning::not deploying: a check failed"; exit 0; fi
+          if [[ "$pending" -gt 0 ]]; then echo "go=false" >>"$GITHUB_OUTPUT"; echo "waiting for the last workflow to finish"; exit 0; fi
+          echo "go=true" >>"$GITHUB_OUTPUT"
+          echo "sha=$SHA" >>"$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.go == 'true'
+        with:
+          ref: ${{ steps.gate.outputs.sha }}
+          fetch-depth: 0
+
+      - name: Install butler
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          curl -fsSL -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          unzip -q butler.zip -d "$HOME/.butler" && rm butler.zip
+          echo "$HOME/.butler" >>"$GITHUB_PATH"
+
+      - name: Game files changed since the live build?
+        if: steps.gate.outputs.go == 'true'
+        id: changed
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          set -euo pipefail
+          live="$(butler status "$ITCH_TARGET" | grep -oE '\| [0-9a-f]{7,} +\|' | tr -d '| ' | head -1 || true)"
+          echo "live build: ${live:-none}"
+          if [[ "${{ inputs.force }}" == "true" ]]; then echo "deploy=true" >>"$GITHUB_OUTPUT"; echo "forced"; exit 0; fi
+          if [[ -n "$live" ]] && git cat-file -e "$live^{commit}" 2>/dev/null; then
+            # Only proto-godot ships (D22); its docs never reach players.
+            game="$(git diff --name-only "$live" HEAD -- proto-godot ':!*.md' | head -1)"
+            [[ -z "$game" ]] && { echo "deploy=false" >>"$GITHUB_OUTPUT"; echo "no game changes since $live"; exit 0; }
+          fi
+          echo "deploy=true" >>"$GITHUB_OUTPUT"
+
   export:
+    name: deploy export
+    needs: gate
+    if: needs.gate.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.7.2
     steps:
       - uses: actions/checkout@v4
+        with: { ref: "${{ needs.gate.outputs.sha }}" }
       - run: cd proto-godot && godot --headless --path . --import
       - run: cd proto-godot && godot --headless --path . -s tests/test_sim.gd
       # Same template exposure as ci.yml: HOME=/github/home in containers.
@@ -25,10 +110,12 @@ jobs:
         with: { name: web, path: proto-godot/dist }
 
   boot:
-    needs: export
+    name: deploy boot gate
+    needs: [gate, export]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { ref: "${{ needs.gate.outputs.sha }}" }
       - uses: actions/setup-node@v4
         with: { node-version: "24.21.0" }
       - uses: actions/download-artifact@v4
@@ -41,7 +128,8 @@ jobs:
           node tools/measure_load.mjs http://127.0.0.1:8765/ 1
 
   push:
-    needs: boot
+    name: deploy push
+    needs: [gate, boot]
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.7.2
@@ -50,5 +138,6 @@ jobs:
         with: { name: web, path: web }
       - shell: bash
         env:
-          BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
-        run: butler push web "$ITCH_TARGET" --userversion "${GITHUB_SHA::7}"
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          SHA: ${{ needs.gate.outputs.sha }}
+        run: butler push web "$ITCH_TARGET" --userversion "${SHA::7}"

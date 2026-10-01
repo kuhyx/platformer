@@ -166,5 +166,16 @@ see `__gameReady`), then butler push to `:html5`.
 Consequences: the Phaser deploy job is gone; publishing another prototype
 needs a new decision. Embed 854x480 (D13), fullscreen button on.
 
+## D23 — itch.io updates itself from green main
+Status: Accepted · 2026-10-01 (owner, in chat)
+Decision: `deploy-itch.yml` runs after ci, file-length and md-naming finish
+on a push to `main`. It deploys only when every check on that commit is
+green (dependency freshness excepted) and `proto-godot/` (markdown aside)
+changed since the live build's version, read from `butler status`.
+`workflow_dispatch` with `force=true` pushes regardless. Secret:
+`BUTLER_API_KEY`, a dedicated itch key.
+Consequences: a merge to `main` that touches proto-godot ships to players
+without a manual step; other prototypes' changes never trigger a push.
+
 ## Open questions
 None. Q1–Q5 closed by D16–D20 on 2026-09-11. D21 awaits the owner.
