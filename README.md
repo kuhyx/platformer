@@ -43,6 +43,9 @@ CLAUDE.md        agent entry point (AGENTS.md points here)
 
 ## Status
 
+Live: https://kuhyx.itch.io/platformer plays proto-godot (D22). Republish
+with Actions → deploy-itch (export, boot gate, butler push).
+
 Godot has the slice (native + web, 2026-09-11); the other four are boot
 stubs. Every manifest is pinned at
 newest stable and every native lint/build passes on the PC (2026-09-06);

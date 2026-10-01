@@ -156,5 +156,15 @@ bake-off and score the real number; a trimmed custom template build
 Alternative: keep 6 MB and treat it as a kill criterion now.
 Consequences: until accepted, CI does not gate proto-godot's size.
 
+## D22 — The itch.io build is proto-godot
+Status: Accepted · 2026-10-01 (owner, in chat)
+Decision: kuhyx.itch.io/platformer embeds proto-godot as its single html5
+upload, public and free. The other four are boot stubs and are not
+published until they carry the slice. `deploy-itch.yml` is the one
+publish path: Godot export, a boot gate (`tools/measure_load.mjs` must
+see `__gameReady`), then butler push to `:html5`.
+Consequences: the Phaser deploy job is gone; publishing another prototype
+needs a new decision. Embed 854x480 (D13), fullscreen button on.
+
 ## Open questions
 None. Q1–Q5 closed by D16–D20 on 2026-09-11. D21 awaits the owner.

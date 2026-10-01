@@ -1,28 +1,54 @@
 name: deploy-itch
-# Manual push of a web build to itch.io. Secrets needed: BUTLER_CREDENTIALS.
-# Repository variables: ITCH_USER, ITCH_GAME. Only proto-phaser builds in
-# CI today; other prototypes are pushed from a local machine with butler.
+# Manual push of the Godot web build to kuhyx.itch.io/platformer, the one
+# embedded html5 upload (D22). Secret needed: BUTLER_CREDENTIALS (a butler
+# API key). Export -> boot gate -> push; nothing is pushed unless the build
+# reaches its first playable frame (window.__gameReady) in Chromium.
 on:
   workflow_dispatch:
-    inputs:
-      channel:
-        description: itch channel name (e.g. phaser-html5)
-        required: true
-        default: phaser-html5
+
+env:
+  ITCH_TARGET: kuhyx/platformer:html5
 
 jobs:
-  phaser:
+  export:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - run: cd proto-godot && godot --headless --path . --import
+      - run: cd proto-godot && godot --headless --path . -s tests/test_sim.gd
+      # Same template exposure as ci.yml: HOME=/github/home in containers.
+      - run: mkdir -p ~/.local/share/godot/export_templates && ln -s /root/.local/share/godot/export_templates/4.7.2.stable ~/.local/share/godot/export_templates/4.7.2.stable
+      - run: cd proto-godot && mkdir -p dist && godot --headless --path . --export-release Web dist/index.html
+      - uses: actions/upload-artifact@v4
+        with: { name: web, path: proto-godot/dist }
+
+  boot:
+    needs: export
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: "24.21.0" }
-      - run: cd proto-phaser && npm ci --no-audit --no-fund && npm run build
-      - run: python3 tools/size_budget.py proto-phaser/dist 1500000
-      - uses: manleydev/butler-publish-itchio-action@master
+      - uses: actions/download-artifact@v4
+        with: { name: web, path: web }
+      - run: cd tools && npm ci --no-audit --no-fund && npx playwright install --with-deps chromium
+      # measure_load.mjs throws (exit 1) if __gameReady never fires.
+      - run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory web &
+          sleep 1
+          node tools/measure_load.mjs http://127.0.0.1:8765/ 1
+
+  push:
+    needs: boot
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: web, path: web }
+      - shell: bash
         env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: ${{ inputs.channel }}
-          ITCH_GAME: ${{ vars.ITCH_GAME }}
-          ITCH_USER: ${{ vars.ITCH_USER }}
-          PACKAGE: proto-phaser/dist
+          BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
+        run: butler push web "$ITCH_TARGET" --userversion "${GITHUB_SHA::7}"
