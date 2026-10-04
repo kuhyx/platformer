@@ -52,3 +52,12 @@ what their last line printed.
 - 2026-09-06: A private reimplementation of a shared gate (the old
   `tools/check_line_cap.py`) is a drift risk, not a convenience; use the
   shim over `~/src/utils`.
+
+## Commands
+
+- run: `./run.sh godot` | n/a: one prototype per engine; `./run.sh <godot|phaser|love|raylib|bevy>`
+- test: `scripts/test_changed.sh --all`
+- test-changed: `scripts/test_changed.sh`
+- lint: `make hygiene && gdlint proto-godot && gdformat --check proto-godot && (cd proto-love && luacheck .)`
+- coverage: n/a: no coverage tooling for Godot/GDScript
+- coverage-gaps: n/a: no coverage tooling for Godot/GDScript
