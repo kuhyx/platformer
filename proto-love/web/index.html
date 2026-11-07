@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Replaces love.js's stock shell (heading, "Downloading..." and
+	     "Powered By" text, footer, alert() on context loss) to meet the web
+	     contract (spec/DOCS-tech-reqs.md, D04, D19): loading is a bare
+	     progress bar; any failure is a static crossed-out-monitor icon.
+	     Copied over dist/index.html by `make web`. Single-threaded love.js
+	     compatibility build (-c), no COOP/COEP. No <title>: itch.io names
+	     the page. -->
+	<style>
+		html, body { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+		#canvas { display: block; position: absolute; inset: 0; margin: auto; outline: none;
+			width: min(100vw, calc(100vh * 854 / 480)); height: auto; aspect-ratio: 854 / 480;
+			visibility: hidden; }
+		#status { position: absolute; inset: 0; display: flex; align-items: center;
+			justify-content: center; }
+		#status-progress { width: 40%; height: 6px; accent-color: #ffffff; }
+		#status-fail { width: 96px; height: 96px; display: none; }
+	</style>
+</head>
+<body>
+	<canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+	<div id="status">
+		<progress id="status-progress"></progress>
+		<svg id="status-fail" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+			<rect x="10" y="16" width="76" height="50" rx="4" fill="none" stroke="#ffffff" stroke-width="6"/>
+			<rect x="34" y="72" width="28" height="6" fill="#ffffff"/>
+			<line x1="12" y1="12" x2="84" y2="84" stroke="#ff3b30" stroke-width="8" stroke-linecap="round"/>
+		</svg>
+	</div>
+	<script>
+	(function () {
+		var READY_MARKER = '__gameReady'; // printed by main.lua on its first love.draw
+		var canvas = document.getElementById('canvas');
+		var status = document.getElementById('status');
+		var progress = document.getElementById('status-progress');
+		var fail = document.getElementById('status-fail');
+
+		function showFailure(err) {
+			console.error(err);
+			progress.style.display = 'none';
+			fail.style.display = 'block';
+			status.style.visibility = 'visible';
+			canvas.style.visibility = 'hidden';
+		}
+
+		// Space and arrows would scroll the page.
+		window.addEventListener('keydown', function (e) {
+			if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
+		}, false);
+		window.onload = function () { window.focus(); };
+		window.onclick = function () { window.focus(); };
+
+		var probe = document.createElement('canvas');
+		if (!(probe.getContext('webgl') || probe.getContext('experimental-webgl'))) {
+			showFailure(new Error('webgl'));
+			return;
+		}
+		canvas.addEventListener('webglcontextlost', function (e) {
+			e.preventDefault();
+			showFailure(new Error('webglcontextlost'));
+		}, false);
+
+		window.__game = { room: -1, gate: 1, air: 0 };
+		window.Module = {
+			arguments: ['./game.love'],
+			INITIAL_MEMORY: 16777216, // love.js -m default; the .love is a few KB
+			canvas: canvas,
+			// love.js has no JS bridge: Lua's print() is the one channel out,
+			// so main.lua prints a marker on its first frame (web contract 1).
+			// Other markers (`__room=N`, `__gate=0`, `__air=0|1`) feed window.__game for
+			// e2e_web.mjs; gate starts up (D02).
+			print: function (line) {
+				if (line === READY_MARKER && typeof window.__gameReady !== 'number') {
+					window.__gameReady = performance.now();
+					return;
+				}
+				var m = /^__(room|gate|air)=(\d+)$/.exec(line);
+				if (m) {
+					window.__game[m[1]] = Number(m[2]);
+					return;
+				}
+				console.log(line);
+			},
+			printErr: console.error.bind(console),
+			setStatus: function () {},
+			totalDependencies: 0,
+			monitorRunDependencies: function (left) {
+				this.totalDependencies = Math.max(this.totalDependencies, left);
+				progress.max = this.totalDependencies || 1;
+				progress.value = this.totalDependencies - left;
+				if (left === 0) {
+					status.style.visibility = 'hidden';
+					canvas.style.visibility = 'visible';
+				}
+			},
+		};
+		window.onerror = function (msg) { showFailure(msg); };
+	}());
+	</script>
+	<script src="game.js"></script>
+	<script async src="love.js" onload="Love(Module).catch(function (e) { console.error(e); })"></script>
+</body>
+</html>

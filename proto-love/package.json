@@ -1,0 +1,8 @@
+{
+  "name": "proto-love-web",
+  "private": true,
+  "description": "love.js web build for proto-love (see README, Web build)",
+  "devDependencies": {
+    "love.js": "11.4.1"
+  }
+}

@@ -17,5 +17,5 @@ export default tseslint.config(
       "@typescript-eslint/no-non-null-assertion": "error",
     },
   },
-  { ignores: ["dist/**", "vite.config.ts", "eslint.config.js"] },
+  { ignores: ["dist/**", "e2e/**", "vite.config.ts", "eslint.config.js"] },
 );

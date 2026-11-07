@@ -3,10 +3,9 @@
 # ============================================================================
 # Run only the tests related to files changed vs HEAD (staged, unstaged and
 # untracked). Quiet: failures plus a one-line summary. The suites are cheap
-# (params validation + headless Godot sim test, ~4 s), so any non-doc change
-# runs both; doc-only changes run nothing. `--all` forces both.
-# Only the Godot sim has unit tests; other prototypes are lint/build only
-# (see their README and the Makefile / CI).
+# (params validation + the per-prototype sim/replay tests), so any non-doc
+# change runs them all; doc-only changes run nothing. `--all` forces all.
+# Each case runs the test command from its prototype's README.
 # ============================================================================
 
 set -euo pipefail
@@ -44,5 +43,9 @@ run validate_params python3 tools/validate_params.py
 # --import registers class_names (.godot/ is gitignored); sim test is headless.
 run godot_import godot --headless --path proto-godot --import
 godot_sim || { rc=1; echo "FAIL godot_sim"; }
-echo "ran 2 suite(s): $([[ $rc -eq 0 ]] && echo pass || echo FAIL)"
+run love_busted sh -c 'cd proto-love && busted'
+run phaser_test sh -c 'cd proto-phaser && npm test'
+run raylib_test make -C proto-raylib test
+run bevy_test sh -c 'cd proto-bevy && cargo test --quiet'
+echo "ran 6 suite(s): $([[ $rc -eq 0 ]] && echo pass || echo FAIL)"
 exit "$rc"

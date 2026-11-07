@@ -21,7 +21,7 @@ First open on a fresh clone: `godot --headless --path . --import` builds
 | File | Role |
 |---|---|
 | `sim.gd` / `sim_state.gd` | pure fixed-step sim (D12) and its snapshot/restore. No nodes. |
-| `rooms.gd` / `rooms.json` | layout loader; asserts every gap and step is beatable at the registry values |
+| `rooms.gd` / `rooms.json` | layout loader (generated copy of `shared/rooms/rooms.json`, D24); asserts every gap and step is beatable at the registry values |
 | `fx.gd` | particles, shake, flash — ticked with the sim, fed its RNG |
 | `main.gd` / `main.tscn` | input polling, drawing, web gate, pause, F1/F5/F6 |
 | `params.gd` / `params.json` | registry accessor (generated copy) |
@@ -30,6 +30,7 @@ First open on a fresh clone: `godot --headless --path . --import` builds
 | `overlay.gd` | debug overlay generated from the registry |
 | `web/shell.html` | custom HTML shell: no text, icon on failure (D19) |
 | `tests/test_sim.gd` | headless slice checks |
+| `tests/replay.gd` | verifies (or `-- --write` regenerates) the cross-engine fixture `shared/replay/slice_trace.json` |
 
 ## Run
 ```

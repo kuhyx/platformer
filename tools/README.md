@@ -4,6 +4,7 @@
 |---|---|---|
 | `validate_params.py` | registry entries well-formed (spec/DOCS-parameters.md) | CI hygiene |
 | `gen_params.py` | regenerate per-prototype param copies | CI checks `git diff` |
+| `gen_rooms.py` | regenerate per-prototype copies of `shared/rooms/rooms.json` (D24) | CI checks `git diff` |
 | `size_budget.py <dir> <bytes>` | gzip size of a web build vs budget | CI per prototype |
 | `measure_load.mjs <url> [runs]` | cached/uncached time to `__gameReady`; throws if it never fires | manual M3/M4; boot gate in `deploy-itch.yml` (runs=1) |
 

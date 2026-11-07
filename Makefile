@@ -1,4 +1,4 @@
-.PHONY: hygiene line-cap check-params gen-params gen-check
+.PHONY: hygiene line-cap check-params gen-params gen-rooms gen-check
 
 hygiene: line-cap check-params gen-check
 
@@ -12,5 +12,9 @@ check-params:
 gen-params:
 	python3 tools/gen_params.py
 
-gen-check: gen-params
-	git diff --exit-code -- ':(glob)proto-*/params.json' ':(glob)proto-*/params.lua' ':(glob)proto-*/params.h'
+gen-rooms:
+	python3 tools/gen_rooms.py
+
+gen-check: gen-params gen-rooms
+	git diff --exit-code -- ':(glob)proto-*/params.json' ':(glob)proto-*/params.lua' ':(glob)proto-*/params.h' \
+	  ':(glob)proto-*/rooms.json' ':(glob)proto-*/rooms.lua' ':(glob)proto-*/rooms.h'

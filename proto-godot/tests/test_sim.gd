@@ -161,6 +161,13 @@ func _early_jump_before_landing(rooms: Rooms, buffer: float) -> bool:
 func _check_buffer(rooms: Rooms) -> void:
 	_expect(not _early_jump_before_landing(rooms, 0.0), "jump_buffer 0: early tap is lost")
 	_expect(_early_jump_before_landing(rooms, 0.1), "jump_buffer 0.1: early tap fires on landing")
+	Params.set_value("coyote_time", 0.0)
+	Params.set_value("jump_buffer", 0.0)
+	var sim := _fresh(rooms)
+	_run(sim, 2, IDLE)
+	_expect("jump" in _run(sim, 1, JUMP), "coyote_time and jump_buffer 0: ground press still jumps")
+	Params.set_value("coyote_time", 0.08)
+	Params.set_value("jump_buffer", 0.1)
 
 
 func _check_determinism(rooms: Rooms) -> void:

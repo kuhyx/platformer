@@ -105,7 +105,8 @@ func _tick_alive(input: Dictionary) -> void:
 	var jump_pressed: bool = input["jump"] and not prev_jump
 	buffer_left = Params.get_value("jump_buffer") if jump_pressed else maxf(buffer_left - TICK, 0.0)
 	coyote_left = Params.get_value("coyote_time") if on_ground else maxf(coyote_left - TICK, 0.0)
-	if buffer_left > 0.0 and (on_ground or coyote_left > 0.0):
+	# The press counts on its own tick, so jump_buffer 0 means no buffering, not no jumping.
+	if (jump_pressed or buffer_left > 0.0) and (on_ground or coyote_left > 0.0):
 		vel.y = -Params.get_value("jump_velocity")
 		buffer_left = 0.0
 		coyote_left = 0.0

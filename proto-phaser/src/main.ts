@@ -1,38 +1,40 @@
-// Boot stub: opens the canvas, draws the avatar placeholder, signals web
-// readiness. The slice (spec/DOCS-slice.md) is not implemented yet.
+// Entry point: resolve the saved room (IndexedDB), then hand a Boot record to
+// the thin Phaser scene. WebGL missing -> the static crossed-out-monitor icon
+// from index.html and nothing else (D19).
 import Phaser from "phaser";
-import { param } from "./params";
+import roomsJson from "../rooms.json" with { type: "json" };
+import { BACKGROUND, HEIGHT, Slice, WIDTH, type Boot } from "./game.ts";
+import { parseRooms } from "./rooms.ts";
+import { readRoom, readSnapshot } from "./save.ts";
+import type { Snapshot } from "./simState.ts";
 
-declare global {
-  interface Window {
-    __gameReady?: number;
-  }
+const MS_PER_S = 1000;
+
+function webglAvailable(): boolean {
+  return document.createElement("canvas").getContext("webgl2") !== null;
 }
 
-const WIDTH = 854; // D13
-const HEIGHT = 480; // D13
-const BACKGROUND = "#1a1a1f";
-const PLAYER_COLOR = 0xffffff;
-const PLACEHOLDER_SPAWN_X = 100; // slice will read spawn from room data
-const PLACEHOLDER_SPAWN_Y = 400;
-
-class Boot extends Phaser.Scene {
-  create(): void {
-    this.add
-      .rectangle(PLACEHOLDER_SPAWN_X, PLACEHOLDER_SPAWN_Y, param("player_w"), param("player_h"), PLAYER_COLOR)
-      .setOrigin(0);
-    this.game.events.once(Phaser.Core.Events.POST_RENDER, () => {
-      window.__gameReady = performance.now();
-    });
+async function boot(): Promise<void> {
+  if (!webglAvailable()) {
+    document.getElementById("fail")?.style.setProperty("display", "block");
+    return;
   }
+  const query = new URLSearchParams(location.search);
+  const debug = import.meta.env.DEV || query.has("debug");
+  const rooms = parseRooms(roomsJson);
+  const startRoom = await readRoom(rooms.rooms.length);
+  const snap = debug && query.has("restore") ? ((await readSnapshot()) as Snapshot | null) : null;
+  const seed = Number(query.get("seed") ?? Math.trunc(Date.now() / MS_PER_S));
+  const config: Boot = { rooms, startRoom, seed, debug, snap };
+  new Phaser.Game({
+    type: Phaser.WEBGL,
+    width: WIDTH,
+    height: HEIGHT,
+    parent: "game",
+    backgroundColor: BACKGROUND,
+    scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+    scene: new Slice(config),
+  });
 }
 
-new Phaser.Game({
-  type: Phaser.WEBGL,
-  width: WIDTH,
-  height: HEIGHT,
-  parent: "game",
-  backgroundColor: BACKGROUND,
-  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-  scene: [Boot],
-});
+void boot();

@@ -12,6 +12,7 @@ jobs:
         with: { python-version: "3.x" }
       - run: python3 tools/validate_params.py
       - run: python3 tools/gen_params.py && git diff --exit-code -- ':(glob)proto-*/params.json' ':(glob)proto-*/params.lua' ':(glob)proto-*/params.h'
+      - run: python3 tools/gen_rooms.py && git diff --exit-code -- ':(glob)proto-*/rooms.json' ':(glob)proto-*/rooms.lua' ':(glob)proto-*/rooms.h'
 
   godot:
     runs-on: ubuntu-latest
@@ -32,6 +33,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: cd proto-godot && godot --headless --path . --import
       - run: cd proto-godot && godot --headless --path . -s tests/test_sim.gd
+      - run: cd proto-godot && godot --headless --path . -s tests/replay.gd
       # Actions sets HOME=/github/home inside containers; the image keeps its
       # templates under /root, so expose them where the editor looks.
       - run: mkdir -p ~/.local/share/godot/export_templates && ln -s /root/.local/share/godot/export_templates/4.7.2.stable ~/.local/share/godot/export_templates/4.7.2.stable
@@ -44,17 +46,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: "24.21.0" }
+        with: { node-version: "26.13.0" }
       - run: cd proto-phaser && npm ci --no-audit --no-fund
       - run: cd proto-phaser && npm run lint && npm run build
+      - run: cd proto-phaser && npm test
       - run: python3 tools/size_budget.py proto-phaser/dist 1500000
 
   love:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get update && sudo apt-get install -y lua-check
+      - run: sudo apt-get update && sudo apt-get install -y lua-check lua-busted
       - run: cd proto-love && luacheck .
+      # Pure sim, save and cross-engine replay specs; no LÖVE needed.
+      - run: cd proto-love && busted
 
   raylib:
     runs-on: ubuntu-latest
@@ -62,6 +67,8 @@ jobs:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y clang-format
       - run: cd proto-raylib && make lint
+      # Pure-C sim tests + the shared replay fixture; no raylib needed.
+      - run: cd proto-raylib && make test
       # Native compile needs raylib 6.0; Ubuntu's package lags. Build from
       # source in a later step or use a container image.
 
@@ -80,3 +87,4 @@ jobs:
           pkg-config libx11-dev libasound2-dev libudev-dev
           libxkbcommon-dev libxkbcommon-x11-0 libwayland-dev
       - run: cd proto-bevy && cargo fmt --check && cargo clippy --all-targets -- -D warnings
+      - run: cd proto-bevy && cargo test

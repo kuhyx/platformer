@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- No text (D04/D19): loading is a bare progress bar; a failure to start
+     (no WebGL, download error) is a static crossed-out-monitor icon. -->
+<style>
+html, body { margin: 0; padding: 0; height: 100%; background: #1a1a1f; overflow: hidden; }
+canvas { display: block; width: 100%; height: 100%; outline: none; }
+#status { pointer-events: none; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+#bar { width: 40%; height: 6px; accent-color: #ffffff; }
+#fail { width: 96px; height: 96px; display: none; }
+</style>
+</head>
+<body>
+<canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+<div id="status">
+<progress id="bar"></progress>
+<svg id="fail" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<rect x="10" y="16" width="76" height="50" rx="4" fill="none" stroke="#ffffff" stroke-width="6"/>
+<rect x="34" y="72" width="28" height="6" fill="#ffffff"/>
+<line x1="12" y1="12" x2="84" y2="84" stroke="#ff3b30" stroke-width="8" stroke-linecap="round"/>
+</svg>
+</div>
+<script>
+const status = document.getElementById('status');
+function showFailure(err) {
+  console.error(err);
+  document.getElementById('bar').style.display = 'none';
+  document.getElementById('fail').style.display = 'block';
+  status.style.display = 'flex';
+}
+var Module = {
+  canvas: document.getElementById('canvas'),
+  print: function (t) { console.log(t); },
+  printErr: function (t) { console.error(t); },
+  onAbort: showFailure,
+};
+Module.canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); showFailure('webgl lost'); });
+window.addEventListener('keydown', function (e) {
+  if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) { e.preventDefault(); }
+});
+const readyPoll = setInterval(function () {
+  if (typeof window.__gameReady === 'number') { status.style.display = 'none'; clearInterval(readyPoll); }
+}, 50);
+window.addEventListener('load', function () {
+  if (!document.createElement('canvas').getContext('webgl2')) { showFailure('no webgl2'); }
+});
+</script>
+{{{ SCRIPT }}}
+</body>
+</html>

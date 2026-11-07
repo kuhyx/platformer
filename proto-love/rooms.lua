@@ -1,0 +1,23 @@
+-- GENERATED FILE - edit shared/rooms/rooms.json and run `make gen-rooms`
+return {
+    width = 854,
+    height = 480,
+    rooms = {
+        {
+            spawn = { 24, 424 },
+            checkpoint = { 8, 416, 12, 24 },
+            solids = { { 0, 440, 390, 40 }, { 454, 440, 400, 40 }, { 560, 400, 294, 40 } },
+            hazards = { { 390, 464, 64, 216 } },
+            gaps = { { 390, 454 } },
+        },
+        {
+            spawn = { 24, 424 },
+            checkpoint = { 8, 416, 12, 24 },
+            solids = { { 0, 440, 300, 40 }, { 356, 440, 498, 40 } },
+            hazards = { { 300, 464, 56, 216 } },
+            gaps = { { 300, 356 } },
+            blade = { rect = { 200, 396, 24, 16 }, track = { 200, 472 } },
+            goal = { 820, 380, 20, 60 },
+        },
+    },
+}

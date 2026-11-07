@@ -177,5 +177,17 @@ changed since the live build's version, read from `butler status`.
 Consequences: a merge to `main` that touches proto-godot ships to players
 without a manual step; other prototypes' changes never trigger a push.
 
+## D24 — One shared room layout
+Status: Proposed · 2026-11-06
+Context: the slice layout lived in `proto-godot/rooms.json`; four more
+prototypes need the same rooms, and LÖVE and C have no JSON parser.
+Decision (recommended): `shared/rooms/rooms.json` is the single layout.
+`make gen-rooms` (`tools/gen_rooms.py`) writes a marked JSON copy for
+Godot, Phaser and Bevy, `rooms.lua` for LÖVE and `rooms.h` for raylib;
+`make gen-check` and CI diff them, as for the registry (D14).
+Consequences: a layout edit lands in all five on the next build. Done on
+the owner's task instruction ("promote rooms.json to shared/ when the
+second lands"); revert = move the file back into proto-godot.
+
 ## Open questions
-None. Q1–Q5 closed by D16–D20 on 2026-09-11. D21 awaits the owner.
+None. Q1–Q5 closed by D16–D20 on 2026-09-11. D21 and D24 await the owner.

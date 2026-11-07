@@ -27,10 +27,10 @@ Build `DOCS-slice.md` in each engine, then fill one scorecard row per prototype.
 | Proto | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | Verdict |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | godot | — | — | 505 | 651 | 10.1 MB | ~2.5 h | yes | partial | yes | yes | 3 | open |
-| phaser | | | | | | | | | | | | |
-| love | | | | | | | | | | | | |
-| raylib | | | | | | | | | | | | |
-| bevy | | | | | | | | | | | | |
+| phaser | — | — | 107 | 211 | 0.36 MB | ~0.3 h (agent) | yes | n/m | yes | yes | 4 | open |
+| love | — | — | 123 | 296 | 1.73 MB | ~0.5 h (agent) | yes | partial | yes | yes | 3 | open |
+| raylib | — | — | 79 | 144 | 0.09 MB | ~0.3 h (agent) | yes | no | yes | yes | 3 | open |
+| bevy | — | — | 529 | 772 | 6.90 MB | n/m | yes | no | yes | yes | 5 | open |
 
 ## Notes
 - godot (2026-09-11): M1/M2 not measured — no i3 iGPU device on hand;
@@ -40,6 +40,29 @@ Build `DOCS-slice.md` in each engine, then fill one scorecard row per prototype.
   (D21). M8 partial: GDScript reloads only with the editor attached.
   M9 via xdotool (native) and Playwright `keyboard.down` (web). M10 via
   `tests/test_sim.gd`, no coverage tool. M11: gdlint + gdformat, 3/5.
+- phaser, love, raylib (2026-11-06): M1/M2 `—` as for godot. M3/M4
+  `tools/measure_load.mjs` on localhost (floors). M6 is agent wall-clock
+  porting an existing sim, not comparable with godot's human-led hours,
+  so the M6 kill criterion is not applied. All three replay
+  `shared/replay/slice_trace.json` exactly (D12).
+  - phaser: M8 n/m (Vite HMR exists, not timed). M9 Playwright
+    `e2e/m9.mjs`, 13 checks. M10 node:test, no coverage. M11
+    typescript-eslint `strictTypeChecked`, 4/5.
+  - love: M8 partial: F5 reloads `sim.lua`/`fx.lua` live, not
+    `main.lua`/`view.lua`. M9 `--autodrive` native, Playwright web. M10
+    busted, no coverage. M11 luacheck (complexity 10), 3/5. love.js 11.4.1
+    runs LÖVE 11.4, not 11.5.
+  - raylib: M8 no (recompile ~1 s, relaunch). M9 `--replay`/`--shot`
+    and xdotool native, Playwright web; no live command socket. M10 C
+    test binary, no coverage. M11 `-Wconversion -Werror` +
+    clang-format, 3/5. Web F5 is a page reload (params compiled in).
+- bevy (2026-11-06, Bevy 0.20.1): M1/M2 `—` as above; M3/M4 floors as
+  above. M6 n/m: the porting agent's wall-clock was not logged. M7 via
+  the F1 sliders on the `Params` resource (read every tick). M8 no
+  (Rust recompile and relaunch). M9 `--autodrive` under Xvfb native,
+  Playwright web; replays `slice_trace.json` exactly (D12). M10
+  `cargo test`, no coverage. M11 clippy `pedantic` `-D warnings`,
+  `unwrap_used` deny, `unsafe_code` forbid + rustfmt, 5/5.
 
 ## Exit
 Pick one engine and record it as D15 in `DOCS-decisions.md`. Archive the other

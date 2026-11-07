@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>proto-bevy</title>
+<!-- Loader + save shim (spec/DOCS-tech-reqs.md web contract, D19). No text:
+     loading is a bare progress bar; any failure (no WebGL2, download or
+     start error) is a static crossed-out-monitor icon. The wasm calls the
+     three globals below: protoSaveRead / protoSaveWrite (IndexedDB behind a
+     synchronous cache) and protoReady (sets window.__gameReady). -->
+<style>
+html, body { margin: 0; padding: 0; height: 100%; background: #1a1a1f; overflow: hidden; }
+#bevy { display: block; width: 100%; height: 100%; outline: none; }
+#status { position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: center; pointer-events: none; }
+#bar { width: 40%; height: 6px; accent-color: #ffffff; }
+#fail { width: 96px; height: 96px; display: none; }
+</style>
+</head>
+<body>
+<canvas id="bevy"></canvas>
+<div id="status">
+  <progress id="bar"></progress>
+  <svg id="fail" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="10" y="16" width="76" height="50" rx="4" fill="none" stroke="#ffffff" stroke-width="6"/>
+    <rect x="34" y="72" width="28" height="6" fill="#ffffff"/>
+    <line x1="12" y1="12" x2="84" y2="84" stroke="#ff3b30" stroke-width="8" stroke-linecap="round"/>
+  </svg>
+</div>
+<script type="module">
+const DB_NAME = 'proto-bevy';
+const STORE = 'save';
+const KEY = 'save';
+let cache = null; // last saved text, served synchronously to the wasm
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(STORE);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function loadSave() {
+  try {
+    const db = await openDb();
+    cache = await new Promise((resolve) => {
+      const req = db.transaction(STORE).objectStore(STORE).get(KEY);
+      req.onsuccess = () => resolve(typeof req.result === 'string' ? req.result : null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (_) {
+    cache = null; // storage blocked: play without a save (D19)
+  }
+}
+
+window.protoSaveRead = () => cache ?? undefined;
+window.protoSaveWrite = (text) => {
+  cache = text;
+  openDb().then((db) => db.transaction(STORE, 'readwrite').objectStore(STORE).put(text, KEY))
+    .catch(() => {});
+};
+window.protoReady = () => {
+  window.__gameReady = performance.now();
+  document.getElementById('status').remove();
+};
+
+function showFailure(err) {
+  console.error(err);
+  document.getElementById('bar').style.display = 'none';
+  document.getElementById('fail').style.display = 'block';
+  const status = document.getElementById('status');
+  if (status) status.style.display = 'flex';
+}
+
+function hasWebgl2() {
+  return !!document.createElement('canvas').getContext('webgl2');
+}
+
+async function main() {
+  if (!hasWebgl2()) return showFailure('webgl2 missing');
+  await loadSave();
+  try {
+    const { default: init } = await import('./proto-bevy.js');
+    await init();
+  } catch (err) {
+    // winit unwinds main() with this message on purpose; the app keeps running.
+    if (!String(err).includes('Using exceptions for control flow')) showFailure(err);
+  }
+}
+main();
+</script>
+</body>
+</html>

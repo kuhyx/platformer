@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>proto-phaser</title>
     <style>
-      html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+      html, body { margin: 0; height: 100%; background: #1a1a1f; overflow: hidden; }
       #game { width: 100%; height: 100%; }
+      #fail { display: none; position: absolute; left: 50%; top: 50%; width: 96px; height: 96px;
+        margin: -48px 0 0 -48px; }
     </style>
   </head>
   <body>
     <div id="game"></div>
+    <!-- D19: shown by src/main.ts only when WebGL2 is missing; icon, no text. -->
+    <svg id="fail" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="10" y="16" width="76" height="50" rx="4" fill="none" stroke="#ffffff" stroke-width="6"/>
+      <rect x="34" y="72" width="28" height="6" fill="#ffffff"/>
+      <line x1="12" y1="12" x2="84" y2="84" stroke="#ff3b30" stroke-width="8" stroke-linecap="round"/>
+    </svg>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
